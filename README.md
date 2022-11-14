@@ -1,4 +1,4 @@
-# Opérations matricielles (chapitre 11.2)
+# Opérations matricielles (chapitre 11)
 
 <!-- Avant de commencer. Consulter les instructions à suivre dans [instructions.md](instructions.md) -->
 
