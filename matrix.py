@@ -25,12 +25,13 @@ class Matrix:
 			raise ValueError(numbers.Integral)
 		self.__height = height
 		self.__width = width
+		
 		if isinstance(data, list):
 			if len(data) != len(self):
 				raise ValueError(list)
 			self.__data = data
 		elif isinstance(data, numbers.Number):
-			self.__data = [data for i in range(len(self))]
+			self.__data = [data for _ in range(len(self))]
 		else:
 			raise TypeError()
 
@@ -141,10 +142,6 @@ class Matrix:
 
 	# TODO: Égalité entre deux matrices
 
-	@classmethod
-	def identity(cls, width):
-		result = cls(width, width)
-		for i in range(width):
-			result[i, i] = 1.0
-		return result
+	# TODO: Méthode de classe identity qui crée une matrice identité
+	
 

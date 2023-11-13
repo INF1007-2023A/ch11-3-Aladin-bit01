@@ -25,12 +25,13 @@ class Matrix:
 			raise ValueError(numbers.Integral)
 		self.__height = height
 		self.__width = width
+		
 		if isinstance(data, list):
 			if len(data) != len(self):
 				raise ValueError(list)
 			self.__data = data
 		elif isinstance(data, numbers.Number):
-			self.__data = [data for i in range(len(self))]
+			self.__data = [data for _ in range(len(self))]
 		else:
 			raise TypeError()
 
@@ -67,7 +68,7 @@ class Matrix:
 
 		:param indexes: Les index en `tuple` (rangée, colonne)
 		"""
-		if not isinstance(indexes, tuple) and len(indexes) == 2:
+		if not (isinstance(indexes, tuple) and len(indexes) == 2):
 			raise IndexError()
 		if indexes[0] >= self.height or indexes[1] >= self.width:
 			raise IndexError()
