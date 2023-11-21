@@ -5,13 +5,11 @@ Chapitre 11.2
 
 import numbers
 import copy
-import collections
-import collections.abc
 
 
 class Matrix:
 	"""
-	Matrice numérique stockée en tableau 1D en format rangée-major.
+	Matrice numérique réelle stockée en tableau 1D en format rangée-major.
 
 	:param height: La hauteur (nb de rangées)
 	:param width: La largeur (nb de colonnes)

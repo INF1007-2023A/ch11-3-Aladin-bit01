@@ -4,9 +4,8 @@ Chapitre 11.2
 
 
 import math
-from inspect import *
 
-from matrix import *
+from _matrix_version_prof import *
 
 
 def main():
