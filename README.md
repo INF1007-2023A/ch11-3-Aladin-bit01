@@ -1,7 +1,5 @@
 # Opérations matricielles (chapitre 11)
 
-<!-- Avant de commencer. Consulter les instructions à suivre dans [instructions.md](instructions.md) -->
-
 Nous allons ajouter les opérateurs à une classe de matrice.
 
 ## Format des données

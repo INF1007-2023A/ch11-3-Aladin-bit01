@@ -6,9 +6,8 @@ import sys
 import unittest
 from unittest import mock
 import inspect
-import random
 
-from matrix import *
+from _matrix_version_prof import *
 
 
 class TestMatrix(unittest.TestCase):
@@ -54,19 +53,17 @@ class TestMatrix(unittest.TestCase):
 		self.assertListEqual(m22.data, [1.0, 1.0, 1.0, 1.0])
 
 	def test_init_invalid(self):
-		with self.assertRaises(TypeError):
+		with self.assertRaises(DimensionsTypeError):
 			m = Matrix(1.1, 1)
-		with self.assertRaises(TypeError):
+		with self.assertRaises(DimensionsTypeError):
 			m = Matrix(1, 1.1)
-		with self.assertRaises(ValueError):
+		with self.assertRaises(DimensionsError):
 			m = Matrix(0, 1)
-		with self.assertRaises(ValueError):
+		with self.assertRaises(DimensionsError):
 			m = Matrix(1, 0)
-		with self.assertRaises(ValueError):
+		with self.assertRaises(DataSizeError):
 			m = Matrix(2, 2, self.d23)
-		with self.assertRaises(ValueError):
-			m = Matrix(2, 2, self.d23)
-		with self.assertRaises(TypeError):
+		with self.assertRaises(DataTypeError):
 			m = Matrix(2, 2, "henlo")
 
 	def test_get_valid(self):

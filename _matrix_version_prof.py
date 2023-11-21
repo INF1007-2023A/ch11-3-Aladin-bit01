@@ -3,8 +3,25 @@ Chapitre 11.2
 """
 
 
+from multiprocessing import Value
 import numbers
 import copy
+
+
+class DimensionsTypeError(TypeError):
+	pass
+
+class DimensionsError(ValueError):
+	pass
+
+class IncompatibleOperandsError(DimensionsError):
+	pass
+
+class DataTypeError(TypeError):
+	pass
+
+class DataSizeError(ValueError):
+	pass
 
 
 class Matrix:
@@ -18,20 +35,20 @@ class Matrix:
 
 	def __init__(self, height, width, data = 0.0):
 		if not isinstance(height, numbers.Integral) or not isinstance(width, numbers.Integral):
-			raise TypeError()
-		if height == 0 or width == 0:
-			raise ValueError(numbers.Integral)
+			raise DimensionsTypeError("Height and width of Matrix argument must be int")
+		if height <= 0 or width <= 0:
+			raise DimensionsError(f"height={height} and width={width} are not > 0")
 		self.__height = height
 		self.__width = width
 		
 		if isinstance(data, list):
 			if len(data) != len(self):
-				raise ValueError(list)
+				raise DataSizeError(f"Data length is {len(data)}, must be {len(self)}")
 			self.__data = data
 		elif isinstance(data, numbers.Number):
 			self.__data = [data for _ in range(len(self))]
 		else:
-			raise TypeError()
+			raise DataTypeError("Data argument must be number or list")
 
 	@property
 	def height(self):
@@ -52,10 +69,7 @@ class Matrix:
 
 		:param indexes: Les index en `tuple` (rangée, colonne)
 		"""
-		if not isinstance(indexes, tuple) and len(indexes) == 2:
-			raise IndexError()
-		if indexes[0] >= self.height or indexes[1] >= self.width:
-			raise IndexError()
+		self._check_indexes(indexes)
 		# TODO: Retourner la valeur
 		return self.data[indexes[0] * self.width + indexes[1]]
 
@@ -66,10 +80,7 @@ class Matrix:
 
 		:param indexes: Les index en `tuple` (rangée, colonne)
 		"""
-		if not (isinstance(indexes, tuple) and len(indexes) == 2):
-			raise IndexError()
-		if indexes[0] >= self.height or indexes[1] >= self.width:
-			raise IndexError()
+		self._check_indexes(indexes)
 		# TODO: L'affectation
 		self.data[indexes[0] * self.width + indexes[1]] = value
 
@@ -106,8 +117,14 @@ class Matrix:
 
 	def has_same_dimensions(self, other):
 		if not isinstance(other, Matrix):
-			raise TypeError()
+			raise TypeError(type(other))
 		return (self.height, self.width) == (other.height, other.width)
+
+	def _check_indexes(self, indexes):
+		if not isinstance(indexes, tuple) and len(indexes) == 2:
+			raise IndexError(f"{indexes} is not tuple of two elements")
+		if indexes[0] >= self.height or indexes[1] >= self.width:
+			raise IndexError(f"{indexes} is not within (height={self.height}, width={self.width})")
 
 	def __pos__(self):
 		return self.copy()
@@ -118,15 +135,18 @@ class Matrix:
 
 	# TODO: Addition
 	def __add__(self, other):
+		# TODO: D'abord vérifier que les opérandes ont les mêmes dimensions. Sinon, on lève un IncompatibleOperandsError.
 		if not self.has_same_dimensions(other):
-			raise ValueError(Matrix)
-		result = Matrix(self.height, self.width)
+			raise IncompatibleOperandsError(f"{other.height}, {other.width}")
+		# TODO: Retourner le résultat de l'addition
+		return Matrix(self.height, self.width, [e1 + e2 for e1, e2 in zip(self.data, other.data)])
+		# Autre façon de faire :
+		#result = Matrix(self.height, self.width)
 		#for i in range(len(self)):
 		#	result.data[i] = self.data[i] + other.data[i]
 		#return result
-		return Matrix(self.height, self.width, [e1 + e2 for e1, e2 in zip(self.data, other.data)])
 	
-	# TODO: Soustraction
+	# TODO: Soustraction (n'oubliez pas qu'on a déjà l'opérateur de négation et d'addition)
 	def __sub__(self, other):
 		return self + -other
 	
@@ -137,7 +157,7 @@ class Matrix:
 
 			# TODO: Vérifier compatibilité.
 			if self.width != other.height:
-				raise ValueError(Matrix)
+				raise IncompatibleOperandsError(f"{other.height}, {other.width}")
 
 			# Rappel de l'algorithme simple pour C = A * B, où A, B sont matrices compatibles (largeur_A = hauteur_B)
 			# C = Matrice(hauteur_A, largeur_B)
@@ -155,7 +175,7 @@ class Matrix:
 			# TODO: Multiplication scalaire.
 			return Matrix(self.height, self.width, [e * other for e in self.data])
 		else:
-			raise TypeError()
+			raise TypeError(type(other))
 
 	# TODO: Multiplication scalaire avec le scalaire à gauche
 	def __rmul__(self, other):
